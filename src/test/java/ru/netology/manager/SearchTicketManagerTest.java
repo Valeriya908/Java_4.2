@@ -3,6 +3,7 @@ package ru.netology.manager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.domain.Ticket;
+import ru.netology.domain.TicketByTravelTimeAscComparator;
 import ru.netology.repository.TicketRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,10 +11,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class SearchTicketManagerTest {
     private TicketRepository repo = new TicketRepository();
     private SearchTicketManager manager = new SearchTicketManager(repo);
+    private TicketByTravelTimeAscComparator comparator = new TicketByTravelTimeAscComparator();
 
-    private Ticket first = new Ticket(1, 3000, "SVO", "LED", 90);
-    private Ticket second = new Ticket(2, 2000, "SVO", "LED", 90);
-    private Ticket third = new Ticket(3, 2000, "SVO", "LED", 90);
+    private Ticket first = new Ticket(1, 3000, "SVO", "LED", 55);
+    private Ticket second = new Ticket(2, 3000, "SVO", "LED", 45);
+    private Ticket third = new Ticket(3, 1500, "SVO", "LED", 50);
 
     @BeforeEach
     public void setUp() {
@@ -23,55 +25,56 @@ class SearchTicketManagerTest {
     }
 
     @Test
-    void shouldSearchWhenBothSearchConditionsTrueAndSortByPrice() {
+    void shouldSearchWhenBothSearchConditionsTrueAndSortByTravelTime() {
 
         Ticket[] expected = new Ticket[]{second, third, first};
-        Ticket[] actual = manager.searchBy("SVO", "LED");
+        Ticket[] actual = manager.searchBy("SVO", "LED", comparator);
 
         assertArrayEquals(expected, actual);
 
     }
 
     @Test
-    void shouldSearchWhenFirstSearchConditionFalseAndSortByPrice() {
+    void shouldSearchWhenFirstSearchConditionFalseAndSortByTravelTime() {
 
         Ticket[] expected = new Ticket[]{};
-        Ticket[] actual = manager.searchBy("VKO", "LED");
+        Ticket[] actual = manager.searchBy("VKO", "LED", comparator);
 
         assertArrayEquals(expected, actual);
 
     }
 
     @Test
-    void shouldSearchWhenSecondSearchConditionFalseAndSortByPrice() {
+    void shouldSearchWhenSecondSearchConditionFalseAndSortByTravelTime() {
 
         Ticket[] expected = new Ticket[]{};
-        Ticket[] actual = manager.searchBy("SVO", "AER");
+        Ticket[] actual = manager.searchBy("SVO", "AER", comparator);
 
         assertArrayEquals(expected, actual);
 
     }
 
     @Test
-    void shouldSearchWhenBothSearchConditionsFalseAndSortByPrice() {
+    void shouldSearchWhenBothSearchConditionsFalseAndSortByTravelTime() {
 
         Ticket[] expected = new Ticket[]{};
-        Ticket[] actual = manager.searchBy("VKO", "AER");
+        Ticket[] actual = manager.searchBy("VKO", "AER",comparator);
 
         assertArrayEquals(expected, actual);
 
     }
 }
 
-    class SearchTicketManagerTestWithEmptySetAndSortByPrice {
+    class SearchTicketManagerTestWithEmptySet {
         private TicketRepository repo = new TicketRepository();
         private SearchTicketManager manager = new SearchTicketManager(repo);
+        private TicketByTravelTimeAscComparator comparator = new TicketByTravelTimeAscComparator();
 
         @Test
-        void shouldSearchBySearchConditionsInEmptySet() {
+        void shouldSearchBySearchConditionsInEmptySetAndSortByTravelTime() {
 
             Ticket[] expected = new Ticket[]{};
-            Ticket[] actual = manager.searchBy("SVO", "LED");
+            Ticket[] actual = manager.searchBy("SVO", "LED", comparator);
 
             assertArrayEquals(expected, actual);
         }
